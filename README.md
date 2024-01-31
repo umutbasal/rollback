@@ -15,7 +15,7 @@ import (
 
 func main() {
 	// Create a new rollbacker
-    rb := rollback.New()
+	rb := rollback.New()
 	// Execute rollback operations on defer
  	defer rb.Rollback()
 

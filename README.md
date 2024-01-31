@@ -19,15 +19,15 @@ func main() {
 	// Execute rollback operations on defer
  	defer rb.Rollback()
 
+    // 1) needs rollback on its own error
 	if err := yourawesomeproject.DoSomething(); err != nil {
-		// needs rollback on its own error
 		rb.Add(func() {
 			return yourawesomeproject.UndoSomething()
 		})
 		return err
 	}
 
-	// needs rollback on any error after this point including its own
+	// 2) needs rollback on any error after this point including its own
 	rb.Add(func() {
 		return yourawesomeproject.UndoSomethingElse()
 	})
@@ -35,7 +35,7 @@ func main() {
 		return err
 	}
 
-	// does not need rollback on its own error
+	// 3) does not need rollback on its own error
 	if err := yourawesomeproject.DoSomethingMore(); err != nil {
 		return err
 	}

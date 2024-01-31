@@ -63,10 +63,13 @@ func randomrunningstatus() {
 		Status: ContainerStatusPending,
 	}
 
+	// Handles its own rollback if return error, so does not need to be added to rollbacker on its error, or before execution
 	rbfn, err := DeployContainer(c)
 	if err != nil {
 		return
 	}
+	// so we add it rollback function after execution
+	// when IsRunning(c) is false, we call rollback function
 	rb.Add(rbfn)
 
 	if !IsRunning(c) {
@@ -95,10 +98,13 @@ func invalidimage() {
 		Status: ContainerStatusPending,
 	}
 
+	// Handles its own rollback if return error, so does not need to be added to rollbacker on its error, or before execution
 	rbfn, err := DeployContainer(c)
 	if err != nil {
 		return
 	}
+	// so we add it rollback function after execution
+	// when IsRunning(c) is false, we call rollback function
 	rb.Add(rbfn)
 
 	if !IsRunning(c) {

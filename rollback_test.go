@@ -177,3 +177,50 @@ func ExampleRollbacker_Clone() {
 	// Rollbacker 1 function 2
 	// Rollbacker 1 function 1
 }
+
+func sub() (rollbackFn func()) {
+	return func() {
+		fmt.Println("rollback sub")
+	}
+}
+
+func NativeDefers() {}
+
+// ExampleNativeDefers
+func ExampleNativeDefers() {
+	var err error
+	var err1, err2, err3 error
+
+	err = err1
+	defer func() {
+		if err != nil {
+			fmt.Printf("Error1: %s\n", err)
+		}
+	}()
+
+	sfn := sub()
+	defer func() {
+		sfn()
+	}()
+
+	err = err2
+	defer func() {
+		if err != nil {
+			fmt.Printf("Error2: %s\n", err)
+		}
+	}()
+
+	err3 = fmt.Errorf("error foo")
+	err = err3
+	defer func() {
+		if err != nil {
+			fmt.Printf("Error3: %s\n", err)
+		}
+	}()
+
+	// Output:
+	// Error3: error foo
+	// Error2: error foo
+	// rollback sub
+	// Error1: error foo
+}

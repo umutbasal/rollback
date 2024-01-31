@@ -142,3 +142,38 @@ func TestRollbackerClone(t *testing.T) {
 		t.Error("Rollbacker should not be affected by clone")
 	}
 }
+
+// ExampleRollbackerClone_2
+func ExampleRollbacker_Clone() {
+	// Create a new Rollbacker
+	rollbacker := New()
+	rollbacker.Add(func() {
+		fmt.Println("Rollbacker 1 function 1")
+	})
+	rollbacker.Add(func() {
+		fmt.Println("Rollbacker 1 function 2")
+	})
+
+	// Create another Rollbacker
+	rollbacker2 := New()
+	rollbacker2.Add(func() {
+		fmt.Println("Rollbacker 2 function 1")
+	})
+
+	// Clone the Rollbackers
+	rbfn := rollbacker.Clone().Rollback
+	rbfn2 := rollbacker2.Clone().Rollback
+
+	// Create an upper Rollbacker
+	upperRollbacker := New()
+	upperRollbacker.Add(rbfn)
+	upperRollbacker.Add(rbfn2)
+
+	// Rollback the upper Rollbacker
+	upperRollbacker.Rollback()
+
+	// Output:
+	// Rollbacker 2 function 1
+	// Rollbacker 1 function 2
+	// Rollbacker 1 function 1
+}

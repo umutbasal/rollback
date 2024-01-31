@@ -10,7 +10,7 @@ package main
 import (
     "fmt"
     "github.com/umutbasal/rollback"
-	yourawesomeproject "github.com/your/awesome/project/lib"
+    yourawesomeproject "github.com/your/awesome/project/lib"
 )
 
 func main() {
